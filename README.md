@@ -72,7 +72,7 @@ The benefit of doing this as opposed to just fetching within the component/page 
 Next I made a very simplistic version of the dynamic route setup. It simply uses the slug to display the JSON data retrieved from the `getCountryInfo` and `getCountryPopulation` using the slug.
 
 ```ts
-// [slug]/page.tsx
+// (country)/[slug]/page.tsx
 import { getCountryInfo, getCountryPopulation } from "@/lib/utils";
 
 export default async function CountryPage({ params }: { params: { slug: string } }) {
@@ -89,3 +89,16 @@ export default async function CountryPage({ params }: { params: { slug: string }
   );
 }
 ```
+
+So as of now the output for the dynamic route is this (for Afghanistan):
+![first ouput](docs/images/first-output.png)
+
+### Developing UI
+First thing I did was do some quick sketches in [excalidraw](https://excalidraw.com) of how I think the UI should be structured. 
+
+Home page:
+![home sketch](docs/images/home-sketch.png)
+
+Country page:
+![country sketch](docs/images/country-sketch.png)
+
