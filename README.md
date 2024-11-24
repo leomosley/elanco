@@ -47,3 +47,45 @@ So there will be [dynamic route](https://nextjs.org/docs/app/building-your-appli
 **Technical Decisions:**
 - Next.js 15 to make use of new "use cache" directive to reduce latency
 - TailwindCSS & ShadCN UI / Charts for quick development of UI 
+
+## Creating Core Functionality
+Before I start working on the UI I'm want to create the core functionality. 
+
+**Utils:**
+
+My first step was to create some reusable util functions for fetching the data. 
+
+The util functions I made where:
+- `getAllPopulations` gets all population counts for all categories
+- `getAllCountriesPopulations` gets all population counts for countries only
+- `getCountryPopulation(code)` gets population count for specific country (takes country code as param)
+- `getCountryFlag(code)` gets countries flag (takes country code as param)
+- `getAllCountriesInfo` gets all countries info (capital, currency, flag, dialCode, unicodeFlag)
+- `getCountryInfo` gets info for specific country (same info as prev)
+
+The benefit of doing this as opposed to just fetching within the component/page is:
+  1. Reduces and redundant repeated code
+  2. Added type safety for return types.
+
+**Dynamic Route:**
+
+Next I made a very simplistic version of the dynamic route setup. It simply uses the slug to display the JSON data retrieved from the `getCountryInfo` and `getCountryPopulation` using the slug.
+
+```ts
+// [slug]/page.tsx
+import { getCountryInfo, getCountryPopulation } from "@/lib/utils";
+
+export default async function CountryPage({ params }: { params: { slug: string } }) {
+  const { slug } = await params;
+  const country = decodeURI(slug);
+  const info = await getCountryInfo(country);
+  const population = await getCountryPopulation(country);
+
+  return (info && population) && (
+    <div>
+      {JSON.stringify(info)}
+      {JSON.stringify(population)}
+    </div>
+  );
+}
+```
