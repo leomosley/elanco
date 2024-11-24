@@ -148,3 +148,5 @@ The header can be placed in the [`layout.tsx`](https://nextjs.org/docs/app/build
 ![header](docs/images/header.png)
 
 **Country Page UI:**
+
+The first parts of this page I implemented was the header which displayed the flag, country name, and country code. This makes use of the Next.js [`Image`](https://nextjs.org/docs/app/api-reference/components/image) component, this allows us to leverage some image optimisation provided by Next. 
