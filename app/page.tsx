@@ -1,10 +1,21 @@
+import { getAllCountriesPopulations } from "@/lib/utils";
+import Link from "next/link";
+
 export default async function Home() {
-  const response = await fetch('https://countriesnow.space/api/v0.1/countries/capital');
-  const data = await response.json();
+  const allCountries = await getAllCountriesPopulations();
 
   return (
-    <div>
-      {JSON.stringify(data["data"])}
+    <div className="flex flex-col gap-2 p-4">
+      {allCountries && allCountries.map((item) => (
+        <Link
+          key={item.code}
+          className=""
+          href={item.country}
+          prefetch
+        >
+          {item.country}
+        </Link>
+      ))}
     </div>
   );
 }
