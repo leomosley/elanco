@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Elanco Interview Task
 
-## Getting Started
+## Initial Thoughts
 
-First, run the development server:
+**Reqs:** Web app, displays country (w/ population data) from REST API, easy way to visualise how many people live in each country
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+**Notes:** Have freedom to choose whatever tool or programming language
+
+**Initial thoughts for implementation**:
+- Next.js for frontend as it is a tool I have experience using
+- ShadCN UI for quick development of feature rich UI
+
+## Development
+### The APIs
+The first essential feature that needs to be tested and implemented is the fetching of data from the provided API.
+
+After going through the [API documentation](https://documenter.getpostman.com/view/1134062/T1LJjU52#intro) and testing some of the outputs using the code bellow I outlined the following API routes which will probably be useful:
+
+```ts
+export default async function Home() {
+  const response = await fetch('https://countriesnow.space/api/v0.1/countries/capital');
+  const data = await response.json();
+
+  return (
+    <div>
+      {JSON.stringify(data["data"])}
+    </div>
+  );
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- `https://countriesnow.space/api/v0.1/countries/population`
+  - `GET` all population data for all countries (+more)
+  - `POST` for specific country population data
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `https://countriesnow.space/api/v0.1/countries/flag/images`
+  - `POST` for specific country flag
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `https://countriesnow.space/api/v0.1/countries/info`
+  - `GET` for info dependent on params for countries
 
-## Learn More
+### Implementation Plan
+My first intuition as to how implement this would be to have a list of all countries on the home page, represented as links to their own respective information page which will display the population data.
 
-To learn more about Next.js, take a look at the following resources:
+So there will be [dynamic route](https://nextjs.org/docs/app/building-your-application/routing/dynamic-routes) for the countries where the slug will be the country name. Using the slug we will fetch the countries relevant data.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Technical Decisions:**
+- Next.js 15 to make use of new "use cache" directive to reduce latency
+- TailwindCSS & ShadCN UI / Charts for quick development of UI 
