@@ -104,7 +104,8 @@ Home page:
 Country page:
 ![country sketch](docs/images/country-sketch.png)
 
-**Developing UI:**
+**UI Prerequisites:**
+
 First things first I added some ShadCN components that I think I'm going to use. I did this by running the following commands:
 
 ```
@@ -114,3 +115,36 @@ pnpm dlx shadcn@latest init
 ```
 pnpm dlx shadcn@latest add button card chart label
 ```
+
+**Home Page UI:**
+First piece of the UI I chose to develop was the home page, the list / index of all countries.
+
+This was pretty simple to implement. The most complex aspect of this was the grouping of countries by name. This was achieved by creating a new map which maps each letter of the alphabet to an array of all countries starting with that letter. Shown in the code below:
+
+```ts
+  const groupedCountries = countries.reduce((group, item) => {
+    const firstLetter = item.country[0].toUpperCase();
+    if (!group[firstLetter]) {
+      group[firstLetter] = [];
+    }
+    group[firstLetter].push(item);
+    return group;
+  }, {} as GroupedCountries);
+```
+
+Then I simply mapped an array of letters (derived from the keys of `groupedCountries`) to the page which in turn maps all countries from the `groupedCountries` to a `Link` component. The `Link` link component has the prefetch flag so that it prefetches the route when hovered.
+
+Then finally I had to play around with the styles to get the column layout. In the end I used the `columns-x` and `break-inside-avoid` utlities on the container and children, respectively. 
+
+The outcome was this:
+![home v1](docs/images/home-v1.png)
+
+**Shared UI Features:**
+
+The main UI feature which is shared accross pages is the header. This will just have some nav links and on the home page I intend in implementing a search bar to filter through the countries.
+
+The header can be placed in the [`layout.tsx`](https://nextjs.org/docs/app/building-your-application/routing/layouts-and-templates) so it will be displayed accross all pages. This is what I implemented:
+
+![header](docs/images/header.png)
+
+**Country Page UI:**
