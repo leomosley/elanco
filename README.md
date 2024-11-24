@@ -94,6 +94,8 @@ So as of now the output for the dynamic route is this (for Afghanistan):
 ![first ouput](docs/images/first-output.png)
 
 ### Developing UI
+**Sketches:**
+
 First thing I did was do some quick sketches in [excalidraw](https://excalidraw.com) of how I think the UI should be structured. 
 
 Home page:
@@ -102,3 +104,13 @@ Home page:
 Country page:
 ![country sketch](docs/images/country-sketch.png)
 
+**Developing UI:**
+First things first I added some ShadCN components that I think I'm going to use. I did this by running the following commands:
+
+```
+pnpm dlx shadcn@latest init
+```
+
+```
+pnpm dlx shadcn@latest add button card chart label
+```

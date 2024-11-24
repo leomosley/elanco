@@ -1,3 +1,6 @@
+import { clsx, type ClassValue } from "clsx"
+import { twMerge } from "tailwind-merge"
+
 export interface APIResponse<T = any> {
   error: boolean;
   msg: string;
@@ -105,4 +108,8 @@ export interface AllCountriesInfoResponse extends APIResponse<CountriesInfo[]> {
 export const getCountryInfo = async (country: string) => {
   const data = await getAllCountriesInfo();
   return data && data.find((item) => item.name === country);
+}
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
 }
