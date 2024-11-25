@@ -8,7 +8,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
-import { CountryPopulation } from "@/lib/utils";
+import { CountryPopulation } from "@/lib/types";
 
 const chartConfig = {
   desktop: {

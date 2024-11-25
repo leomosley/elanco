@@ -1,6 +1,6 @@
 "use client";
 
-import { CountryPopulation } from '@/lib/utils';
+import { CountryPopulation } from '@/lib/types';
 import Link from 'next/link';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
