@@ -305,7 +305,7 @@ The final build error which I found was an issue with the country page. As I was
 
 After that the build process was able to run successfully and I was ready to deploy.
 
-![build sucess](image.png)
+![build sucess](docs/images/build-success.png)
 
 Deploying the web app was very simple. I used vercel to deploy it as it takes minimal setup and 0 cost for my level of usage for this web app. The deployment can be viewed at
 [`elanco.mosly.dev`](https://elanco.mosly.dev).
