@@ -150,3 +150,159 @@ The header can be placed in the [`layout.tsx`](https://nextjs.org/docs/app/build
 **Country Page UI:**
 
 The first parts of this page I implemented was the header which displayed the flag, country name, and country code. This makes use of the Next.js [`Image`](https://nextjs.org/docs/app/api-reference/components/image) component, this allows us to leverage some image optimisation provided by Next. 
+
+Then I implemented the sidebar which was just a simple div with some static content.
+
+Finally I added the graph for displaying the population over the previous years. I used the [ShadCN Charts](https://ui.shadcn.com/charts) components to display this data. It is built on top of [Rechart](https://recharts.org/en-US/) and allows for the easy implementation of high quality feature rich graphs and charts. All I had to do was pass the `populationCounts` object to it and do some configuration so that it would display the data correctly. The outcome was the following:
+
+![country page v1](docs/images/country-page-v1.png)
+
+**Search Functionality:**
+
+In order to implement the search functionality I had to re-think the structure / placing of my search bar. As it was only used in one location (the home page) I decided that it would not be needed to have the search bar in the header. Also the added complexity of a state management system like zustand/context API seemed like over engineering for the simple purpose of filtering an array. 
+
+Therefore, I decided to move the search bar onto the home page it self. Initially I thought I'd just put it on the home page component it self and then apply the filter to the `allCountries` fetched from the util function. However, after consideration, I decided that this would not be a good decision as it would mean that the [`Countries`](components/home/countries.tsx) component would run the grouping process everytime that array was eddited. So instead I placed the search bar within the `Countries` component so that it could filter the grouped countries.
+
+This is what UI now looks like:
+
+![search](docs/images/search.png)
+
+### Final Improvements
+There are some final improvements I would like to make. They are:
+- Implement the use of the [`"use cache"`](https://nextjs.org/docs/canary/app/api-reference/directives/use-cache) directive for util functions.
+- Ensure correct handling of errors/null values
+- Ensure responsiveness of UI
+
+**Handling of errors/null values:**
+
+If the info or population data fetched in the country page is null, because either the data does not exist for that country or the country itself does not exist, the app should display some kind of message informing the user that there is no data. My solution for this was just to add this conditional rendering statement in the country page.
+
+```ts
+  // ...
+  return (!population || !info) ? (
+    <main className="flex flex-col mx-auto h-screen md:max-w-5xl items-center justify-center gap-2 p-2">
+      <h1 className="leading-tight">Oops! Looks like we don't have any data on this country.</h1>
+      <h2 className="text-sm leading-tight text-muted-foreground">Head back to home and try another country.</h2>
+      <Link
+        href="/"
+        prefetch
+      >
+        <Button
+          className="px-4 rounded-full"
+          size="sm"
+        >
+          Go back to home
+        </Button>
+      </Link>
+    </main>
+  ) : (
+  // ...
+```
+
+Which provides the following input if `info` or `population` are null:
+
+![404](docs/images/404.png)
+
+> **This was incorrect** <br> 
+My assumption was that all valid countries would have a info and population record. However, there were cicumstances where they did not, where `info` was undefined. So I had to re think how to deal with null/undefined values on this page. What I actually implemented was this: <br>
+```ts
+return (!population) ? (
+  // ...
+  ) : (
+    <main>
+        <div>
+          {info?.flag && (
+            // ...
+          )}
+          <div>
+            <h1>{country}</h1>
+            <span>{population?.code}</span>
+          </div>
+        </div>
+        <Chart populationData={population.populationCounts} />
+      </section>
+      {info && (
+        // ...
+      )}
+    </main>
+  );
+```
+
+> This allowed the country page to deal with null/undefined values of info whilst still being able to display population data.
+
+![no info](docs/images/no-info.png)
+
+**Responsiveness of UI:**
+
+This feature was pretty simple to implement as I had been keeping in mind responsiveness whilst I built most of the app. However, there were a cases where it could be improved.
+
+These improvements were mostly done on the country page where I had to deal with responsive flexbox layouts to change the positioning of the sidebar to a header on smaller viewports.
+
+So now the sidebar falls under the graph when on smaller viewports:
+![alt text](docs/images/responsive-country-page.png)
+
+**`"use cache"` Directive:**
+
+In order to make use of the "use cache" directive you have to turn on the experimental `dynamicIO` flag:
+
+
+```ts
+// next.config.ts
+import type { NextConfig } from 'next';
+ 
+const nextConfig: NextConfig = {
+  experimental: {
+    dynamicIO: true,
+  },
+}
+ 
+export default nextConfig;
+```
+
+Initially when I tried implementing the inline `"use cache"` for each function in the utils file I was being met with this error:
+
+![use cache error](docs/images/use-cache-error.png)
+
+As stated by the error message in order to implement the `"use cache"` directive I would not be able to use it inline and instead would have to place it at the file level. This caused an issue as there were other functions in the utils that where not async and all functions `"use cache"` file must be async. 
+
+This gave me an opportunity to seperate the fferent parts of the utils file so that it was better organised. I seperated the `lib` dir into:
+
+- [`types`](lib/types.ts) - all the types used accross the app
+- [`fetch`](lib/fetch.ts) - all the fetch utils (w/ `"use cache"` at top) 
+- [`utils`](lib/utils.ts) - the remaning sync utils
+
+This allowed me to successfully implement the caching of those fetch utilities.
+
+### Deployment
+
+In order to deploy the app I first had to check that it would build correctly by running:
+
+```
+pnpm run build
+```
+
+When I ran this it outlined some errors in the build process that would prevent me from deploying the site. These were:
+
+![build errors](docs/images/build-errors.png)
+
+The first two build errors where easy to fix, just simple swaps/changes.
+
+The issues with the types required a little more effort. I was using a generic type for the API response that passes in the type of the data returned in the fetch request response. Then to create the types for each different fetch utility I would just extend `APIResponse` type passing in the type for the data as the generic. The issue is that my linter doesn't like having empty types, meaning that there is probably a better implementation of what I was trying to achieve. 
+
+So in order to fix this issue I simply changed them from interfaces to types. E.g:
+
+```ts
+export ingerface AllCountriesInfoResponse extends APIResponse<CountriesInfo[]> {};
+
+// Changed to...
+
+export type AllCountriesInfoResponse = APIResponse<CountriesInfo[]>;
+```
+
+This is a much clearer representation of the type.
+
+The final build error which I found was an issue with the country page. As I was accessing dynamic data through the params it required the use of a `Suspense` boundary to deal with the loading state. Next's `loading.tsx` works as a `Suspense` boundary for the route it is placed in, therefore, all I needed to do was implement a `loading.tsx` in the `(country)/[slug]` path.
+
+After that the build process was able to run successfully and I was ready to deploy.
+
+![build sucess](image.png)

@@ -11,12 +11,9 @@ export default async function CountryPage({ params }: { params: Promise<{ slug: 
   const info = await getCountryInfo(country);
   const population = await getCountryPopulation(country);
 
-  console.log(info);
-  console.log(population);
-
   return (!population) ? (
     <main className="flex flex-col mx-auto h-screen md:max-w-5xl items-center justify-center gap-2 p-2 text-center">
-      <h1 className="leading-tight">Oops! Looks like we dont have any data on this country.</h1>
+      <h1 className="leading-tight">Oops! Looks like we don&apos;t have any data on this country.</h1>
       <h2 className="text-sm leading-tight text-muted-foreground">Head back to home and try another country.</h2>
       <Link
         href="/"

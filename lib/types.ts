@@ -1,4 +1,4 @@
-export interface APIResponse<T = {} | []> {
+export interface APIResponse<T = unknown> {
   error: boolean;
   msg: string;
   data: T;
@@ -13,9 +13,9 @@ export interface CountryPopulation {
   }[];
 }
 
-export interface AllPopulationResponse extends APIResponse<CountryPopulation[]> { }
+export type AllPopulationResponse = APIResponse<CountryPopulation[]>;
 
-export interface CountryPopulationResponse extends APIResponse<CountryPopulation> { }
+export type CountryPopulationResponse = APIResponse<CountryPopulation>;
 
 export interface Flag {
   name: string;
@@ -24,7 +24,7 @@ export interface Flag {
   iso3: string;
 }
 
-export interface CountryFlagResponse extends APIResponse<Flag> { }
+export type CountryFlagResponse = APIResponse<Flag>;
 
 export interface CountriesInfo {
   name: string;
@@ -35,4 +35,4 @@ export interface CountriesInfo {
   dialCode: string;
 }
 
-export interface AllCountriesInfoResponse extends APIResponse<CountriesInfo[]> { }
+export type AllCountriesInfoResponse = APIResponse<CountriesInfo[]>;
