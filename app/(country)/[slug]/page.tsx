@@ -1,19 +1,22 @@
 import { Chart } from "@/components/country/chart";
 import { Button } from "@/components/ui/button";
 import { getCountryInfo, getCountryPopulation } from "@/lib/fetch";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 
 export default async function CountryPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const country = decodeURI(slug);
+  const country = decodeURIComponent(slug);
   const info = await getCountryInfo(country);
   const population = await getCountryPopulation(country);
 
+  console.log(info);
+  console.log(population);
 
-  return (!population || !info) ? (
+  return (!population) ? (
     <main className="flex flex-col mx-auto h-screen md:max-w-5xl items-center justify-center gap-2 p-2 text-center">
-      <h1 className="leading-tight">Oops! Looks like we don't have any data on this country.</h1>
+      <h1 className="leading-tight">Oops! Looks like we dont have any data on this country.</h1>
       <h2 className="text-sm leading-tight text-muted-foreground">Head back to home and try another country.</h2>
       <Link
         href="/"
@@ -29,10 +32,12 @@ export default async function CountryPage({ params }: { params: Promise<{ slug: 
     </main>
   ) : (
     <main className="flex mx-auto md:max-w-5xl flex-col sm:flex-row sm:justify-between gap-2 p-2 pt-14">
-      <section className="w-4/5">
+      <section className={cn(
+        info ? "w-4/5" : "w-full"
+      )}>
         <div className="flex h-32">
-          <div className="h-28 w-fit my-auto border rounded-lg shadow-sm bg-muted">
-            {info?.flag ? (
+          {info?.flag && (
+            <div className="h-28 min-w-20 w-fit my-auto border rounded-lg shadow-sm bg-muted">
               <Image
                 className="w-full h-full object-fill rounded-lg"
                 src={info.flag}
@@ -42,10 +47,8 @@ export default async function CountryPage({ params }: { params: Promise<{ slug: 
                 quality={50}
                 priority
               />
-            ) : (
-              <span className="text-lg sm:text-2xl text-muted-foreground">{info.unicodeFlag}</span>
-            )}
-          </div>
+            </div>
+          )}
           <div className="my-auto p-2">
             <h1 className="text-lg sm:text-3xl tracking-tight leading-none">{country}</h1>
             <span className="text-xs sm:text-base text-muted-foreground">{population?.code}</span>
@@ -55,20 +58,22 @@ export default async function CountryPage({ params }: { params: Promise<{ slug: 
           <Chart populationData={population.populationCounts} />
         </div>
       </section>
-      <aside className="flex-1 rounded-lg shadow-sm p-4 border">
-        <div className="flex flex-col gap-1">
-          <span className="leading-snug">Capital</span>
-          <span className="text-sm">{info.capital}</span>
-        </div>
-        <div className="flex flex-col gap-0.5">
-          <span className="leading-tight">Currency</span>
-          <span className="text-sm">{info.currency}</span>
-        </div>
-        <div className="flex flex-col gap-0.5">
-          <span className="leading-tight">Dial Code</span>
-          <span className="text-sm">{info.dialCode}</span>
-        </div>
-      </aside>
+      {info && (
+        <aside className="flex-1 rounded-lg shadow-sm p-4 border">
+          <div className="flex flex-col gap-1">
+            <span className="leading-snug">Capital</span>
+            <span className="text-sm">{info.capital}</span>
+          </div>
+          <div className="flex flex-col gap-0.5">
+            <span className="leading-tight">Currency</span>
+            <span className="text-sm">{info.currency}</span>
+          </div>
+          <div className="flex flex-col gap-0.5">
+            <span className="leading-tight">Dial Code</span>
+            <span className="text-sm">{info.dialCode}</span>
+          </div>
+        </aside>
+      )}
     </main>
   );
 }
