@@ -26,7 +26,7 @@ export function Countries({
   const filteredGroupedCountries = () => {
     if (!filter) return groupedCountries;
 
-    const filtered: Record<string, CountryPopulation[]> = {}
+    const filtered: GroupedCountries = {}
     Object.entries(groupedCountries).forEach(([letter, countries]) => {
       const filteredCountries = countries.filter(country =>
         country.country.toLowerCase().includes(filter.toLowerCase())
