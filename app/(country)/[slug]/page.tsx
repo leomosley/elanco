@@ -30,7 +30,8 @@ export default async function CountryPage({ params }: { params: Promise<{ slug: 
   ) : (
     <main className="flex mx-auto md:max-w-5xl flex-col sm:flex-row sm:justify-between gap-2 p-2 pt-14">
       <section className={cn(
-        info ? "w-4/5" : "w-full"
+        "w-full",
+        info && "sm:w-4/5",
       )}>
         <div className="flex h-32">
           {info?.flag && (
