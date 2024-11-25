@@ -45,7 +45,6 @@ export const getCountryFlag = async (code: string) => {
       iso2: code,
     }),
     redirect: "follow",
-    cache: "force-cache"
   });
   if (response.ok) {
     const d = await response.json() as CountryFlagResponse;
@@ -57,7 +56,6 @@ export const getAllCountriesInfo = async () => {
   const response = await fetch("https://countriesnow.space/api/v0.1/countries/info?returns=capital,currency,flag,dialCode,unicodeFlag", {
     method: "GET",
     redirect: "follow",
-    cache: "force-cache"
   });
   if (response.ok) {
     const d = await response.json() as AllCountriesInfoResponse;
