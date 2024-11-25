@@ -310,3 +310,20 @@ After that the build process was able to run successfully and I was ready to dep
 Deploying the web app was very simple. I used vercel to deploy it as it takes minimal setup and 0 cost for my level of usage for this web app. The deployment can be viewed at
 [`elanco.mosly.dev`](https://elanco.mosly.dev).
 
+## Reflective Analysis
+I believe that the web app I have developed meets the requirements of the task. However, I there are some additional features / improvements I would have liked to of implemented. Such as:
+
+- More interactivity with population data
+  - Comparing countries populations
+  - Changing year range
+  - etc
+
+- More information about each country
+  - Include cities and their populaition
+  - etc
+
+- UI Features
+  - I would have liked to implement something like [this](https://magicui.design/docs/components/globe), where you could click on / hover over the countries to view information about their population.
+
+- Testing
+  - I would have liked to have implemented some unit testing at least but time escaped me.
