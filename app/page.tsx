@@ -1,4 +1,4 @@
-import Countries from "@/components/home/countries";
+import { Countries } from "@/components/home/countries";
 import { getAllCountriesPopulations } from "@/lib/fetch";
 
 export default async function Home() {

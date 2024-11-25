@@ -1,17 +1,13 @@
 "use client";
 
-import { CountryPopulation } from '@/lib/types';
+import { CountryPopulation, GroupedCountries } from '@/lib/types';
 import Link from 'next/link';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { Search } from './search';
 
-interface GroupedCountries {
-  [key: string]: CountryPopulation[];
-}
-
-export default function Countries({
+export function Countries({
   countries
 }: {
   countries: CountryPopulation[]

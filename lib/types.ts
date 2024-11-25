@@ -36,3 +36,7 @@ export interface CountriesInfo {
 }
 
 export type AllCountriesInfoResponse = APIResponse<CountriesInfo[]>;
+
+export interface GroupedCountries {
+  [key: string]: CountryPopulation[];
+}
